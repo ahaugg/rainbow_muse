@@ -18,7 +18,8 @@ def make_color(b, values):
     lights = b.get_light_objects()
     for light in lights:
         if light.on:
-            light.brightness = random.randint(0,250)
+            light.brightness = random.randint(0,256) # real upper limit
+            #light.brightness = random.randint(0,25)
             light.xy = [random.random(), random.random()]
     time.sleep(5)
 
@@ -46,15 +47,20 @@ if __name__ == "__main__":
                         type=int,
                         default=5000,
                         help="The port to listen on")
+    parser.add_argument("--bridge",
+                        default='192.168.0.100',
+                        help="The Philipps bridge IP")
+
     args = parser.parse_args()
     try:
-        b = Bridge('192.168.0.100')
+        b = Bridge(args.bridge)
         last_update = arrow.now()
     except:
         pass
 
     dispatcher = dispatcher.Dispatcher()
-    # dispatcher.map("/muse*", print)
+    # the one below gives you all the endpoints!
+    dispatcher.map("/muse/elements/*", print)
     dispatcher.map("/muse/eeg", eeg_handler, b)
     # dispatcher.map("/muse/acc", acc_handler, "ACC")
     # dispatcher.map("/muse/eeg", print)
