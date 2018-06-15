@@ -37,6 +37,22 @@ def ProcessSignal(signal):
 
 def InitiateLights:
     # initiate lights
+    from phue import Bridge
+
+    b = Bridge('ip_of_your_bridge')
+
+    # If the app is not registered and the button is not pressed,
+    #press the button and call connect() (this only needs to be run a single time)
+    b.connect()
+
+    #return list of lights that are connected
+
+
+
+
+
+
+
 
 
 
