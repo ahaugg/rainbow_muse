@@ -3,12 +3,6 @@ from phue import Bridge
 import time
 import random
 
-#
-# for i in range(0,1):
-# 	print(i)
-# 	time.sleep(3)
-
-
 b = Bridge('192.168.0.100') # Enter bridge IP here.
 
 #If running for the first time, press button on bridge and run with b.connect() uncommented
@@ -19,6 +13,7 @@ b.connect()
 # 	b.set_light(3, 'bri',10)
 # 	time.sleep(0.5)
 
+#Enter indices of light bulbs (default: 0 and 1)
 lights = b.get_light_objects()
 lights[0].brightness = 2
 lights[1].brightness = 1
