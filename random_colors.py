@@ -20,7 +20,7 @@ b.connect()
 # 	time.sleep(0.5)
 
 lights = b.get_light_objects()
-lights[0].brightness = 1
+lights[0].brightness = 2
 lights[1].brightness = 1
 
 lights[0].xy = [0,1]
