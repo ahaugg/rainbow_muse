@@ -20,17 +20,13 @@ lights[1].brightness = 1
 
 lights[0].xy = [0,1]
 lights[1].xy = [1,0]
-#
+
 # for i in range(0,1000000):
 # 	lights[0].xy = [random.random(),random.random()]
 # 	time.sleep(0.5)
-#
 
 
 
-
-
-#
 # lights = b.get_light_objects()
 #
 # for light in lights:
