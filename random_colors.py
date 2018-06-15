@@ -16,7 +16,7 @@ b.connect()
 #Enter indices of light bulbs (default: 0 and 1)
 lights = b.get_light_objects()
 lights[0].brightness = 2
-lights[1].brightness = 1
+lights[1].brightness = 2
 
 lights[0].xy = [0,1]
 lights[1].xy = [1,0]
