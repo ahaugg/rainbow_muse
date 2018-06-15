@@ -18,15 +18,15 @@ def make_color(b, values):
     lights = b.get_light_objects()
     for light in lights:
         if light.on:
-            light.brightness = random.randint(0,256) # real upper limit
-            #light.brightness = random.randint(0,25)
+            light.brightness = random.randint(0, 256)  # real upper limit
+            # light.brightness = random.randint(0,25)
             light.xy = [random.random(), random.random()]
     time.sleep(5)
 
 
 def eeg_handler(unused_addr, args, ch1, ch2, ch3, ch4, ch5):
     electrodes = [str(i) for i in [ch1, ch2, ch3, ch4, ch5]]
-    #print("EEG\t{}".format("\t".join(electrodes)))
+    # print("EEG\t{}".format("\t".join(electrodes)))
     global last_update
     if last_update + timedelta(seconds=1) < arrow.now():
         last_update = arrow.now()
@@ -62,8 +62,8 @@ if __name__ == "__main__":
     # the one below gives you all the endpoints!
     dispatcher.map("/muse/elements/*", print)
     dispatcher.map("/muse/eeg", eeg_handler, b)
+    # below would be used if you want to access the accelerometer
     # dispatcher.map("/muse/acc", acc_handler, "ACC")
-    # dispatcher.map("/muse/eeg", print)
 
     server = osc_server.ThreadingOSCUDPServer(
         (args.ip, args.port), dispatcher)
