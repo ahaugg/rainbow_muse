@@ -16,10 +16,11 @@ b.connect()
 #Enter indices of light bulbs (default: 0 and 1)
 lights = b.get_light_objects()
 lights[0].brightness = 2
-lights[1].brightness = 3
+for light in lights:
+    if light.on:
+        light.brightness = 250
+        light.xy = [random.random(),random.random()]
 
-lights[0].xy = [0,1]
-lights[1].xy = [1,0]
 
 # for i in range(0,1000000):
 # 	lights[0].xy = [random.random(),random.random()]
