@@ -15,7 +15,6 @@ b.connect()
 
 #Enter indices of light bulbs (default: 0 and 1)
 lights = b.get_light_objects()
-lights[0].brightness = 2
 for light in lights:
     if light.on:
         light.brightness = 250
