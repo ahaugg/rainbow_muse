@@ -35,8 +35,9 @@ def ProcessSignal(signal):
     # return processed signal
     return processed_signal
 
-def InitiateLights:
+def InitiateLights():
     # initiate lights
+
     from phue import Bridge
 
     b = Bridge('ip_of_your_bridge')
@@ -46,6 +47,8 @@ def InitiateLights:
     b.connect()
 
     #return list of lights that are connected
+
+
 
 
 
