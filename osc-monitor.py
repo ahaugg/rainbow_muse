@@ -14,12 +14,26 @@ import arrow
 import random
 
 
+def update_brightness(b):
+    lights = b.get_light_objects()
+    for light in lights:
+        if light.on:
+            light.brightness = random.randint(0,256)
+
+
+def update_color(b):
+    lights = b.get_light_objects()
+    for light in lights:
+        if light.on:
+            light.xy = [random.random(), random.random()]
+
+
 def make_color(b, values):
     lights = b.get_light_objects()
     for light in lights:
         if light.on:
-            light.brightness = random.randint(0, 256)  # real upper limit
-            # light.brightness = random.randint(0,25)
+            #light.brightness = random.randint(0, 256)  # real upper limit
+            light.brightness = random.randint(0,25)
             light.xy = [random.random(), random.random()]
     time.sleep(5)
 
@@ -36,6 +50,16 @@ def eeg_handler(unused_addr, args, ch1, ch2, ch3, ch4, ch5):
 def acc_handler(unused_addr, args, x, y, z):
     axes = [str(i) for i in [x, y, z]]
     print("ACC\t{}".format("\t".join(axes)))
+
+
+def dont_blink(unused_addr, args, count):
+    print('dah, you blinked')
+    update_color(b)
+
+
+def clencher(unused_addr, args, count):
+    print('dah, you clenched your jaw')
+    update_brightness(b)
 
 
 if __name__ == "__main__":
@@ -60,8 +84,10 @@ if __name__ == "__main__":
 
     dispatcher = dispatcher.Dispatcher()
     # the one below gives you all the endpoints!
-    dispatcher.map("/muse/elements/*", print)
-    dispatcher.map("/muse/eeg", eeg_handler, b)
+    # dispatcher.map("/*", print)
+    dispatcher.map("/muse/elements/blink", dont_blink, "BLINK")
+    dispatcher.map("/muse/elements/jaw_clench", clencher, "CLENCH")
+    # dispatcher.map("/muse/eeg", eeg_handler, b)
     # below would be used if you want to access the accelerometer
     # dispatcher.map("/muse/acc", acc_handler, "ACC")
 
