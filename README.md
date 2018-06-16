@@ -1,10 +1,10 @@
-# Rainbow muse
+# Rainbow muse 🌈🏳️‍🌈
 ![](party_mode.gif)
 
 ### `osc-monitor.py`
 Reads an input OSC stream from e.g. a `Muse Monitor` mobile app to put out the eeg recordings as well as blink/clenching events.
 
-Events are used to light up Philips Hue lamps. Disruptive events like blinks & clenches lead to a rapid color change (aka party mode), resting recordings lead to slow color waves. 
+Events are used to light up Philips Hue lamps. Disruptive events like blinks & clenches lead to a rapid color change (aka party mode), resting recordings lead to slow color waves.
 
 Requires `python-osc`, `phue` & `arrow` libraries.
 
