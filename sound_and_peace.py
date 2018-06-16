@@ -5,16 +5,34 @@ import time
 import numpy as np
 import os
 from matplotlib import pyplot as plt
+from phue import Bridge
+import random
 
 bell = 0
 total_std_list = []
 count = 0
+
+
+
+b = Bridge('192.168.0.100') # Enter bridge IP here.
+
+b.connect()
+light = None
+lights = b.get_light_objects()
+for _light in lights:
+    if _light.on:
+        light = _light
+
+light.brightness = 250
+light.transitiontime = 3
+
 def _start(address,threshold, duration):
     def save_eeg(new_samples, new_timestamps):
         channel_std = []
         global bell
         global total_std_list
         global count
+        global light
         # eeg_samples.append(new_samples)
         # timestamps.append(new_timestamps)
         # print(new_samples.shape)
@@ -28,8 +46,10 @@ def _start(address,threshold, duration):
         count +=1
         total_std_list.append(total_std)
         if total_std > threshold and not total_std == 0 :
-            os.system("/usr/bin/canberra-gtk-play --id='bell'")
+            if light.on:
+                light.xy = [random.random(),random.random()]
             bell += 1
+            os.system("/usr/bin/canberra-gtk-play --id='bell'")
 
 
 
@@ -94,8 +114,8 @@ if found == True:
     # Note: Streaming is synchronous, so code here will not execute until the stream has been closed
     print('Stream has ended')
     print('Final Peace Score: ',(count - bell))
-    # plt.plot(total_std_list)
-    # plt.show()
+    plt.plot(total_std_list)
+    plt.show()
 
 else:
     print('Sorry Unable to find muse: %s'%my_muse_name)
