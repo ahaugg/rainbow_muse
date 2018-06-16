@@ -8,28 +8,32 @@ from matplotlib import pyplot as plt
 from phue import Bridge
 import random
 
+light_flag = True
+sound_flag = True
+IP_address_for_bulb = '192.168.0.100'
 bell = 0
 total_std_list = []
 count = 0
 
 
+if light_flag == True:
+    b = Bridge(IP_address_for_bulb) # Enter bridge IP here.
 
-b = Bridge('192.168.0.100') # Enter bridge IP here.
+    b.connect()
+    light = None
+    lights = b.get_light_objects()
+    for _light in lights:
+        if _light.on:
+            light = _light
 
-b.connect()
-light = None
-lights = b.get_light_objects()
-for _light in lights:
-    if _light.on:
-        light = _light
-
-light.brightness = 250
-light.transitiontime = 3
+    light.brightness = 250
+    light.transitiontime = 3
 
 def _start(address,threshold, duration):
     def save_eeg(new_samples, new_timestamps):
         channel_std = []
         global bell
+        global light_flag
         global total_std_list
         global count
         global light
@@ -46,10 +50,11 @@ def _start(address,threshold, duration):
         count +=1
         total_std_list.append(total_std)
         if total_std > threshold and not total_std == 0 :
-            if light.on:
+            if light_flag:
                 light.xy = [random.random(),random.random()]
             bell += 1
-            os.system("/usr/bin/canberra-gtk-play --id='bell'")
+            if sound_flag == True:
+                os.system("/usr/bin/canberra-gtk-play --id='bell'") # Beep
 
 
 
