@@ -14,28 +14,106 @@ import arrow
 import random
 
 
-def make_color(b, values):
+def update_brightness(b):
+    """
+    Update the brightness in party-mode
+    Fully random between 0 & 256
+    """
     lights = b.get_light_objects()
     for light in lights:
         if light.on:
-            light.brightness = random.randint(0, 256)  # real upper limit
-            # light.brightness = random.randint(0,25)
+            light.brightness = random.randint(0, 256)
+
+
+def update_color(b):
+    """
+    Update the color in party-mode
+    Fully random between 0 & 1 for X & Y
+    """
+    lights = b.get_light_objects()
+    for light in lights:
+        if light.on:
             light.xy = [random.random(), random.random()]
-    time.sleep(5)
+
+
+def random_light_value(xy_value):
+    """
+    Update the light values in in wave-mode
+    Get new value that's up to 5% bigger/smaller than previous value
+    """
+    new_xy_value = xy_value + random.uniform(-0.05, 0.05)
+    while new_xy_value > 1 or new_xy_value < 0:
+        new_xy_value = xy_value + random.uniform(-0.05, 0.05)
+    print('return new light value')
+    return new_xy_value
+
+
+def random_brightness_value(brightness_value):
+    """
+    Update the brightness in wave-mode
+    Brightness value will be within 5 of previous value
+    """
+    new_brightness = brightness_value + random.randint(-5, 5)
+    while new_brightness > 255 or new_brightness < 0:
+        new_brightness = brightness_value + random.randint(-5, 5)
+    print('return new brightness')
+    return new_brightness
+
+
+def make_color(b, values):
+    """
+    Wrapper for the different wave-light/brightness functions
+    """
+    lights = b.get_light_objects()
+    for light in lights:
+        if light.on:
+            #light.brightness = random.randint(0, 256)  # real upper limit
+            xy_values = light.xy
+            new_x = random_light_value(xy_values[0])
+            new_y = random_light_value(xy_values[1])
+            light.brightness = random_brightness_value(light.brightness)
+            light.xy = [new_x, new_y]
+    time.sleep(1)
 
 
 def eeg_handler(unused_addr, args, ch1, ch2, ch3, ch4, ch5):
+    """
+    Use the EEG handler to make the wave-light function
+    """
     electrodes = [str(i) for i in [ch1, ch2, ch3, ch4, ch5]]
     # print("EEG\t{}".format("\t".join(electrodes)))
     global last_update
     if last_update + timedelta(seconds=1) < arrow.now():
         last_update = arrow.now()
         make_color(args[0], 'foobar')
+        print('updated color wave')
 
 
 def acc_handler(unused_addr, args, x, y, z):
+    """
+    Doesn't actually do anything right now but print
+    the accelerometer data
+    """
     axes = [str(i) for i in [x, y, z]]
     print("ACC\t{}".format("\t".join(axes)))
+
+
+def dont_blink(unused_addr, args, count):
+    """
+    Callback function for blinking events
+    Just runs the update_color for party mode
+    """
+    print('dah, you blinked')
+    update_color(b)
+
+
+def clencher(unused_addr, args, count):
+    """
+    Callback function for jaw clenching events
+    Just runs the update_brightness for party mode
+    """
+    print('dah, you clenched your jaw')
+    update_brightness(b)
 
 
 if __name__ == "__main__":
@@ -60,7 +138,9 @@ if __name__ == "__main__":
 
     dispatcher = dispatcher.Dispatcher()
     # the one below gives you all the endpoints!
-    dispatcher.map("/muse/elements/*", print)
+    # dispatcher.map("/*", print)
+    dispatcher.map("/muse/elements/blink", dont_blink, "BLINK")
+    dispatcher.map("/muse/elements/jaw_clench", clencher, "CLENCH")
     dispatcher.map("/muse/eeg", eeg_handler, b)
     # below would be used if you want to access the accelerometer
     # dispatcher.map("/muse/acc", acc_handler, "ACC")
