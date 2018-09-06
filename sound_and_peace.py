@@ -7,9 +7,13 @@ import os
 from matplotlib import pyplot as plt
 from phue import Bridge
 import random
+from distutils.util import strtobool
 
-light_flag = True
-sound_flag = True
+sound_flag = strtobool(sys.argv[4])
+light_flag = strtobool(sys.argv[5])
+
+# sound_flag = True
+# light_flag = True
 IP_address_for_bulb = '192.168.0.100'
 bell = 0
 total_std_list = []
